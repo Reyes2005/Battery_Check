@@ -102,7 +102,7 @@ class GlobalPlugin (globalPluginHandler.GlobalPlugin):
 	#Decorador para asignarle su descripción y atajo de teclado a esta función del addon.
 	#Translators: The function of the command is described, which is to start or stop the battery monitoring.
 	@script(
-		description=_("Inicia o detiene (si se pulsa dos veces rápidamente) el monitoreo de la batería."),
+		description=_("Inicia o detiene el monitoreo de la batería."),
 		gesture=None
 	)
 	def script_manageMonitoring(self, gesture):
