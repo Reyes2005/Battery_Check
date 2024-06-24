@@ -4,7 +4,7 @@
 # Copyright (C) 2024 Ángel Reyes <angeldelosreyesfaz@gmail.com>
 
 """
-Este addon tiene como función el manejar la batería y su carga.
+La función de este addon es monitorear la batería del sistema.
 """
 
 #Importamos las librerías del núcleo de NVDA
