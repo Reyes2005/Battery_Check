@@ -23,7 +23,7 @@ addon_info = {
 	"addon_summary": _("Monitoreo de batería"),
 	# Add-on description
 	# Translators: Long description to be shown for this add-on on add-on information from add-ons manager
-	"addon_description": _("La función de este addon es monitorear la batería del sistema."),
+	"addon_description": _("La función de este addon es monitorear la batería del sistema y emitir un aviso al esta llegar al 100%."),
 	# version
 	"addon_version": "1.0",
 	# Author(s)
