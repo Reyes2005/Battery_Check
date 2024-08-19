@@ -8,6 +8,8 @@ La función de este addon es monitorear la batería del sistema y emitir un avis
 """
 
 #Importamos las librerías del núcleo de NVDA
+import config
+from gui import settingsDialogs
 import globalPluginHandler
 import ui
 import tones
@@ -29,6 +31,7 @@ psutil.__path__.append(os.path.join(dirAddon, "lib", "psutil"))
 #Se elimina la información de las rutas por efectos de memoria.
 del sys.path[-2:]
 from .timer import Timer
+from .settings import battery_check_Settings
 
 def disableInSecureMode(decoratedCls):
 	"""
@@ -37,6 +40,12 @@ def disableInSecureMode(decoratedCls):
 	if globalVars.appArgs.secure: #Si se detecta la ejecución en este tipo de pantallas, se devuelve una instancia sin modificar de globalPluginHandler.GlobalPlugin, si no es así se devuelve la clase decorada.
 		return globalPluginHandler.GlobalPlugin
 	return decoratedCls
+
+confspec = {
+	# se establecen opciones por defecto para el complemento. En este caso, el monitoreo estará desactivado.
+	"AutoMonitor": "boolean(default=False)"
+}
+config.conf.spec["battery_check"] = confspec
 
 @disableInSecureMode #Se llama al decorador para deshabilitar el uso del complemento en pantallas seguras.
 class GlobalPlugin (globalPluginHandler.GlobalPlugin):
@@ -51,16 +60,23 @@ class GlobalPlugin (globalPluginHandler.GlobalPlugin):
 		"""
 		super(GlobalPlugin, self).__init__() #Se inicializa la clase padre con sus valores.
 
+		# Establecemos ajustes de usuario para el  complemento a una nueva categoría en las opciones de NVDA.
+		settingsDialogs.NVDASettingsDialog.categoryClasses.append(battery_check_Settings)
 		#Se inicializan los valores de la instancia actual para su control.
 		self.monitoring = False
 		self.monitoringThread = None
 		self.stopThread = False
+
+		# Se verifica la opción de monitoreo cuando NVDA se inicia. Si el usuario la activó, empezará la acción.
+		if config.conf["battery_check"]["AutoMonitor"]:
+			self.startMonitoring()
 
 	def terminate(self):
 		"""
 		Método que se ejecuta al salir de NVDA para cerrar adecuadamente todo lo que se tenga que cerrar.
 		"""
 		self.stopMonitoring()
+		gui.settingsDialogs.NVDASettingsDialog.categoryClasses.remove(battery_check_Settings)
 
 	def startMonitoring(self):
 		"""
