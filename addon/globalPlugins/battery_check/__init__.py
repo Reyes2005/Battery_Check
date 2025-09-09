@@ -12,6 +12,11 @@ import globalPluginHandler
 import ui
 import tones
 import globalVars
+import config
+from gui import guiHelper
+from gui import NVDASettingsDialog
+from gui.settingsDialogs import SettingsPanel
+import wx
 import addonHandler
 addonHandler.initTranslation()
 from scriptHandler import script
@@ -20,15 +25,14 @@ import os
 import threading
 import time
 import sys
-#Se crea una variable a la que se le asignará la ruta actual, para luego añadirlo a las rutas de sys. De la misma manera se le agrega a la ruta actual la ruta lib, desde donde se importará la librería psutil.
-dirAddon = os.path.dirname(__file__)
-sys.path.append(dirAddon)
-sys.path.append(os.path.join(dirAddon, "lib"))
 import psutil
-psutil.__path__.append(os.path.join(dirAddon, "lib", "psutil"))
-#Se elimina la información de las rutas por efectos de memoria.
-del sys.path[-2:]
 from .timer import Timer
+
+confspec = {
+	"startMonitorAtStartup": "boolean(default=false)",
+	"startMonitorAtConnect": "boolean(default=false)"
+}
+config.conf.spec['batterycheck'] = confspec
 
 def disableInSecureMode(decoratedCls):
 	"""
@@ -55,12 +59,19 @@ class GlobalPlugin (globalPluginHandler.GlobalPlugin):
 		self.monitoring = False
 		self.monitoringThread = None
 		self.stopThread = False
+		NVDASettingsDialog.categoryClasses.append(batteryCheckPanel)
+		if config.conf['batterycheck']['startMonitorAtStartup'] or config.conf['batterycheck']['startMonitorAtConnect']:
+			self.startMonitoring()
 
 	def terminate(self):
 		"""
 		Método que se ejecuta al salir de NVDA para cerrar adecuadamente todo lo que se tenga que cerrar.
 		"""
 		self.stopMonitoring()
+		try:
+			NVDASettingsDialog.categoryClasses.remove(batteryCheckPanel)
+		except RuntimeError:
+			pass
 
 	def startMonitoring(self):
 		"""
@@ -97,17 +108,25 @@ class GlobalPlugin (globalPluginHandler.GlobalPlugin):
 		"""
 		Método que se ejecuta en otro hilo y que estará monitoreando constantemente el porcentaje y estado de la batería.
 		"""
-		#Se instancias 2 objetos de temporizador y se inicializa una variable de control en False.
+		#Se instancian 2 objetos de temporizador y se inicializa una variable de control en False.
 		verify = Timer()
 		beep = Timer()
 		needs_beep = False
+		batteryStatus = None
 		while self.monitoring and not self.stopThread: #Bucle while para mantener la monitorización, la condición para mantener este activo será que si el monitoreo está activado y no se ha establecido la variable stopThread en True entonces seguirá funcionando.
 			if verify.elapsed(1, False): #Se verifica cada segundo si existe batería en el sistema, si el porcentaje de la misma es 100% y si está conectada a la corriente, para si es así entonces establecer una variable de control en True, encargada de manejar el temporizador de los avisos.
 				verify.restart()
 				battery = psutil.sensors_battery()
-				needs_beep = (battery is not None and battery.percent == 100 and battery.power_plugged)
-				if not battery.power_plugged: #Si la batería ya no está conectada pero sigue el monitoreo (el bucle ejecutándose) este se detiene.
+				if batteryStatus is None:
+					batteryStatus = battery.power_plugged
+
+				needs_beep = (battery.percent == 100 and batteryStatus)
+				if not batteryStatus and config.conf['batterycheck']['startMonitorAtConnect'] is False: #Si la batería ya no está conectada pero sigue el monitoreo (el bucle ejecutándose y a menos de que la monitorización al conectarse esté desactivada) este se detiene.
 					self.stopMonitoring()
+
+				if batteryStatus != battery.power_plugged:
+					batteryStatus = battery.power_plugged
+					ui.message(_("Batería {}.".format('conectada' if batteryStatus else 'desconectada')))
 
 			if needs_beep and beep.elapsed(10, False): #Si la variable de control está establecida en True y pasan 10 segundos, entonces se emite un tono y se lanza un aviso por el TTS.
 				beep.restart()
@@ -132,3 +151,32 @@ class GlobalPlugin (globalPluginHandler.GlobalPlugin):
 
 		else:
 			self.stopMonitoring()
+
+class batteryCheckPanel(SettingsPanel):
+	# TRANSLATORS: Settings dialog and/or panel title
+	title = _("Battery Check settings")
+	def makeSettings(self, sizer):
+		helper = guiHelper.BoxSizerHelper(self, sizer=sizer)
+		self.startMonitorAtStartup = helper.addItem(wx.CheckBox(
+			# TRANSLATORS: Start battery monitoring at startup checkbox
+			self, wx.ID_ANY, label=_("Iniciar el monitoreo al iniciar NVDA")))
+		self.startMonitorAtStartup.SetValue(
+			config.conf['batterycheck']['startMonitorAtStartup'])
+		self.startMonitorAtConnect = helper.addItem(wx.CheckBox(
+			# TRANSLATORS: Start battery monitoring at connect the computer checkbox
+			self, wx.ID_ANY, label=_("Iniciar el monitoreo al conectar la computadora")))
+		self.startMonitorAtConnect.SetValue(
+			config.conf['batterycheck']['startMonitorAtConnect'])
+
+	def onSave(self):
+		config.conf['batterycheck']['startMonitorAtStartup'] = self.startMonitorAtStartup.GetValue()
+		config.conf['batterycheck']['startMonitorAtConnect'] = self.startMonitorAtConnect.GetValue()
+
+	def onPanelActivated(self):
+		self.originalProfileName = config.conf.profiles[-1].name
+		config.conf.profiles[-1].name = None
+		self.Show()
+
+	def onPanelDeactivated(self):
+		config.conf.profiles[-1].name = self.originalProfileName
+		self.Hide()
