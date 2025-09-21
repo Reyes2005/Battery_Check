@@ -69,7 +69,7 @@ class GlobalPlugin (globalPluginHandler.GlobalPlugin):
 
 		# Se verifica la opción de monitoreo cuando NVDA se inicia. Si el usuario la activó, empezará la acción.
 		if config.conf["battery_check"]["AutoMonitor"]:
-			self.startMonitoring()
+			self.startMonitoring(True) # Agregamos True como argumento para evitar mensajes de aviso del monitoreo al iniciar.
 
 	def terminate(self):
 		"""
@@ -78,14 +78,14 @@ class GlobalPlugin (globalPluginHandler.GlobalPlugin):
 		self.stopMonitoring()
 		gui.settingsDialogs.NVDASettingsDialog.categoryClasses.remove(battery_check_Settings)
 
-	def startMonitoring(self):
+	def startMonitoring(self, quiet=False):
 		"""
 		Método que ejecuta la acción de iniciar el monitoreo de la batería.
 		"""
 		battery = psutil.sensors_battery() #Se crea una instancia de sensors_battery para verificar si existe batería en el sistema.
 		if battery is None: #Si no es así se emite un mensaje y se detiene la ejecución del método.
 			#Translators: Message to inform the user that there is no battery in the system.
-			ui.message(_("No hay batería del sistema."))
+			if not quiet: ui.message(_("No hay batería del sistema."))
 			return
 
 		if not self.monitoring: #Se verifica si el monitoreo no está activado para si es así, iniciarlo.
@@ -93,9 +93,9 @@ class GlobalPlugin (globalPluginHandler.GlobalPlugin):
 			self.monitoringThread = threading.Thread(target=self.checkBattery)
 			self.monitoringThread.start()
 			#Translators: Message to indicate that battery monitoring has started.
-			ui.message(_("Monitoreo de la batería iniciado."))
+			if not quiet: ui.message(_("Monitoreo de la batería iniciado."))
 
-	def stopMonitoring(self):
+	def stopMonitoring(self, quiet=False):
 		"""
 		Método que ejecuta la acción de detener el monitoreo de la batería.
 		"""
@@ -107,7 +107,7 @@ class GlobalPlugin (globalPluginHandler.GlobalPlugin):
 				self.stopThread = False
 
 			#Translators: Message to indicate that battery monitoring has finished.
-			ui.message(_("Monitoreo de la batería finalizado."))
+			if not quiet: ui.message(_("Monitoreo de la batería finalizado."))
 
 	def checkBattery(self):
 		"""
