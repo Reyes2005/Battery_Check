@@ -8,6 +8,8 @@ La función de este addon es monitorear la batería del sistema y emitir un avis
 """
 
 #Importamos las librerías del núcleo de NVDA
+import config
+from gui import settingsDialogs
 import globalPluginHandler
 import ui
 import tones
@@ -27,6 +29,7 @@ import time
 import sys
 import psutil
 from .timer import Timer
+from .settings import battery_check_Settings
 
 confspec = {
 	"startMonitorAtStartup": "boolean(default=false)",
@@ -42,6 +45,12 @@ def disableInSecureMode(decoratedCls):
 		return globalPluginHandler.GlobalPlugin
 	return decoratedCls
 
+confspec = {
+	# se establecen opciones por defecto para el complemento. En este caso, el monitoreo estará desactivado.
+	"AutoMonitor": "boolean(default=False)"
+}
+config.conf.spec["battery_check"] = confspec
+
 @disableInSecureMode #Se llama al decorador para deshabilitar el uso del complemento en pantallas seguras.
 class GlobalPlugin (globalPluginHandler.GlobalPlugin):
 	"""
@@ -55,6 +64,8 @@ class GlobalPlugin (globalPluginHandler.GlobalPlugin):
 		"""
 		super(GlobalPlugin, self).__init__() #Se inicializa la clase padre con sus valores.
 
+		# Establecemos ajustes de usuario para el  complemento a una nueva categoría en las opciones de NVDA.
+		settingsDialogs.NVDASettingsDialog.categoryClasses.append(battery_check_Settings)
 		#Se inicializan los valores de la instancia actual para su control.
 		self.monitoring = False
 		self.monitoringThread = None
@@ -63,24 +74,25 @@ class GlobalPlugin (globalPluginHandler.GlobalPlugin):
 		if config.conf['batterycheck']['startMonitorAtStartup'] or config.conf['batterycheck']['startMonitorAtConnect']:
 			self.startMonitoring()
 
+		# Se verifica la opción de monitoreo cuando NVDA se inicia. Si el usuario la activó, empezará la acción.
+		if config.conf["battery_check"]["AutoMonitor"]:
+			self.startMonitoring(True) # Agregamos True como argumento para evitar mensajes de aviso del monitoreo al iniciar.
+
 	def terminate(self):
 		"""
 		Método que se ejecuta al salir de NVDA para cerrar adecuadamente todo lo que se tenga que cerrar.
 		"""
 		self.stopMonitoring()
-		try:
-			NVDASettingsDialog.categoryClasses.remove(batteryCheckPanel)
-		except RuntimeError:
-			pass
+		gui.settingsDialogs.NVDASettingsDialog.categoryClasses.remove(battery_check_Settings)
 
-	def startMonitoring(self):
+	def startMonitoring(self, quiet=False):
 		"""
 		Método que ejecuta la acción de iniciar el monitoreo de la batería.
 		"""
 		battery = psutil.sensors_battery() #Se crea una instancia de sensors_battery para verificar si existe batería en el sistema.
 		if battery is None: #Si no es así se emite un mensaje y se detiene la ejecución del método.
 			#Translators: Message to inform the user that there is no battery in the system.
-			ui.message(_("No hay batería del sistema."))
+			if not quiet: ui.message(_("No hay batería del sistema."))
 			return
 
 		if not self.monitoring: #Se verifica si el monitoreo no está activado para si es así, iniciarlo.
@@ -88,9 +100,9 @@ class GlobalPlugin (globalPluginHandler.GlobalPlugin):
 			self.monitoringThread = threading.Thread(target=self.checkBattery)
 			self.monitoringThread.start()
 			#Translators: Message to indicate that battery monitoring has started.
-			ui.message(_("Monitoreo de la batería iniciado."))
+			if not quiet: ui.message(_("Monitoreo de la batería iniciado."))
 
-	def stopMonitoring(self):
+	def stopMonitoring(self, quiet=False):
 		"""
 		Método que ejecuta la acción de detener el monitoreo de la batería.
 		"""
@@ -102,7 +114,7 @@ class GlobalPlugin (globalPluginHandler.GlobalPlugin):
 				self.stopThread = False
 
 			#Translators: Message to indicate that battery monitoring has finished.
-			ui.message(_("Monitoreo de la batería finalizado."))
+			if not quiet: ui.message(_("Monitoreo de la batería finalizado."))
 
 	def checkBattery(self):
 		"""
@@ -180,3 +192,4 @@ class batteryCheckPanel(SettingsPanel):
 	def onPanelDeactivated(self):
 		config.conf.profiles[-1].name = self.originalProfileName
 		self.Hide()
+  
