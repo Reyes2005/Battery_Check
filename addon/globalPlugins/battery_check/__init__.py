@@ -15,10 +15,6 @@ import ui
 import tones
 import globalVars
 import config
-from gui import guiHelper
-from gui import NVDASettingsDialog
-from gui.settingsDialogs import SettingsPanel
-import wx
 import addonHandler
 addonHandler.initTranslation()
 from scriptHandler import script
@@ -30,12 +26,6 @@ import sys
 import psutil
 from .timer import Timer
 from .settings import battery_check_Settings
-
-confspec = {
-	"startMonitorAtStartup": "boolean(default=false)",
-	"startMonitorAtConnect": "boolean(default=false)"
-}
-config.conf.spec['batterycheck'] = confspec
 
 def disableInSecureMode(decoratedCls):
 	"""
@@ -70,9 +60,6 @@ class GlobalPlugin (globalPluginHandler.GlobalPlugin):
 		self.monitoring = False
 		self.monitoringThread = None
 		self.stopThread = False
-		NVDASettingsDialog.categoryClasses.append(batteryCheckPanel)
-		if config.conf['batterycheck']['startMonitorAtStartup'] or config.conf['batterycheck']['startMonitorAtConnect']:
-			self.startMonitoring()
 
 		# Se verifica la opción de monitoreo cuando NVDA se inicia. Si el usuario la activó, empezará la acción.
 		if config.conf["battery_check"]["AutoMonitor"]:
@@ -83,7 +70,7 @@ class GlobalPlugin (globalPluginHandler.GlobalPlugin):
 		Método que se ejecuta al salir de NVDA para cerrar adecuadamente todo lo que se tenga que cerrar.
 		"""
 		self.stopMonitoring()
-		gui.settingsDialogs.NVDASettingsDialog.categoryClasses.remove(battery_check_Settings)
+		settingsDialogs.NVDASettingsDialog.categoryClasses.remove(battery_check_Settings)
 
 	def startMonitoring(self, quiet=False):
 		"""
@@ -163,33 +150,3 @@ class GlobalPlugin (globalPluginHandler.GlobalPlugin):
 
 		else:
 			self.stopMonitoring()
-
-class batteryCheckPanel(SettingsPanel):
-	# TRANSLATORS: Settings dialog and/or panel title
-	title = _("Battery Check settings")
-	def makeSettings(self, sizer):
-		helper = guiHelper.BoxSizerHelper(self, sizer=sizer)
-		self.startMonitorAtStartup = helper.addItem(wx.CheckBox(
-			# TRANSLATORS: Start battery monitoring at startup checkbox
-			self, wx.ID_ANY, label=_("Iniciar el monitoreo al iniciar NVDA")))
-		self.startMonitorAtStartup.SetValue(
-			config.conf['batterycheck']['startMonitorAtStartup'])
-		self.startMonitorAtConnect = helper.addItem(wx.CheckBox(
-			# TRANSLATORS: Start battery monitoring at connect the computer checkbox
-			self, wx.ID_ANY, label=_("Iniciar el monitoreo al conectar la computadora")))
-		self.startMonitorAtConnect.SetValue(
-			config.conf['batterycheck']['startMonitorAtConnect'])
-
-	def onSave(self):
-		config.conf['batterycheck']['startMonitorAtStartup'] = self.startMonitorAtStartup.GetValue()
-		config.conf['batterycheck']['startMonitorAtConnect'] = self.startMonitorAtConnect.GetValue()
-
-	def onPanelActivated(self):
-		self.originalProfileName = config.conf.profiles[-1].name
-		config.conf.profiles[-1].name = None
-		self.Show()
-
-	def onPanelDeactivated(self):
-		config.conf.profiles[-1].name = self.originalProfileName
-		self.Hide()
-  
