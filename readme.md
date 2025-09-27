@@ -11,6 +11,11 @@ De la misma manera, si deseas realizar un donativo para que el desarrollo de est
 
 ## Changelog
 
+### v1.1
+
+Añadido un apartado de configuración en las opciones de NVDA para configurar el monitoreo automático tanto al iniciar NVDA como al conectar el cargador.
+Corrección mínima de errores.
+
 ### v1.0
 
 Versión inicial del complemento.

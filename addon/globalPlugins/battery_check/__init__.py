@@ -37,7 +37,8 @@ def disableInSecureMode(decoratedCls):
 
 confspec = {
 	# se establecen opciones por defecto para el complemento. En este caso, el monitoreo estará desactivado.
-	"AutoMonitor": "boolean(default=False)"
+	"AutoMonitor": "boolean(default=False)",
+	"StartMonitorAtConnect": "boolean(default=False)"
 }
 config.conf.spec["battery_check"] = confspec
 
@@ -120,7 +121,7 @@ class GlobalPlugin (globalPluginHandler.GlobalPlugin):
 					batteryStatus = battery.power_plugged
 
 				needs_beep = (battery.percent == 100 and batteryStatus)
-				if not batteryStatus and config.conf['batterycheck']['startMonitorAtConnect'] is False: #Si la batería ya no está conectada pero sigue el monitoreo (el bucle ejecutándose y a menos de que la monitorización al conectarse esté desactivada) este se detiene.
+				if not batteryStatus and config.conf['battery_check']['StartMonitorAtConnect'] is False: #Si la batería ya no está conectada pero sigue el monitoreo (el bucle ejecutándose y a menos de que la monitorización al conectarse esté desactivada) este se detiene.
 					self.stopMonitoring()
 
 				if batteryStatus != battery.power_plugged:
