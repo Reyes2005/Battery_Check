@@ -17,9 +17,12 @@ class battery_check_Settings(SettingsPanel):
 		Helper = guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
 		self.AutoMonitor = Helper.addItem(wx.CheckBox(self, label=_("Monitorear la batería cuando inicie NVDA")))
 		self.StartMonitorAtConnect = Helper.addItem(wx.CheckBox(self, label=_("Monitorear automáticamente la batería cuando se conecte el cargador")))
+		self.BatteryPercentLimit = Helper.addLabeledControl(_("Porcentaje de batería máximo desde que se empezará a emitir la alerta"), wx.SpinCtrl)
 		self.AutoMonitor.SetValue(config.conf["battery_check"]["AutoMonitor"])
 		self.StartMonitorAtConnect.SetValue(config.conf["battery_check"]["StartMonitorAtConnect"])
+		self.BatteryPercentLimit.SetValue(config.conf["battery_check"]["BatteryPercentLimit"])
 
 	def onSave(self):
 		config.conf["battery_check"]["AutoMonitor"] = self.AutoMonitor.GetValue()
 		config.conf["battery_check"]["StartMonitorAtConnect"] = self.StartMonitorAtConnect.GetValue()
+		config.conf["battery_check"]["BatteryPercentLimit"] = self.BatteryPercentLimit.GetValue()

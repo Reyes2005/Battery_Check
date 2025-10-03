@@ -22,7 +22,6 @@ from scriptHandler import script
 import os
 import threading
 import time
-import sys
 import psutil
 from .timer import Timer
 from .settings import battery_check_Settings
@@ -38,7 +37,8 @@ def disableInSecureMode(decoratedCls):
 confspec = {
 	# se establecen opciones por defecto para el complemento. En este caso, el monitoreo estará desactivado.
 	"AutoMonitor": "boolean(default=False)",
-	"StartMonitorAtConnect": "boolean(default=False)"
+	"StartMonitorAtConnect": "boolean(default=False)",
+"BatteryPercentLimit": "integer(default=100)"
 }
 config.conf.spec["battery_check"] = confspec
 
@@ -120,7 +120,7 @@ class GlobalPlugin (globalPluginHandler.GlobalPlugin):
 				if batteryStatus is None:
 					batteryStatus = battery.power_plugged
 
-				needs_beep = (battery.percent == 100 and batteryStatus)
+				needs_beep = (battery.percent >= config.conf["battery_check"]["BatteryPercentLimit"] and batteryStatus)
 				if not batteryStatus and config.conf['battery_check']['StartMonitorAtConnect'] is False: #Si la batería ya no está conectada pero sigue el monitoreo (el bucle ejecutándose y a menos de que la monitorización al conectarse esté desactivada) este se detiene.
 					self.stopMonitoring()
 
@@ -132,7 +132,7 @@ class GlobalPlugin (globalPluginHandler.GlobalPlugin):
 				beep.restart()
 				tones.beep(432, 500)
 				#Translators: Message to indicate to the user that their battery is fully charged.
-				ui.message(_("¡Batería totalmente cargada!"))
+				ui.message(_("¡Batería cargada al límite!"))
 
 			time.sleep(0.05) #Se hace una espera de 5 milisegundos para no matar el CPU.
 
