@@ -7,9 +7,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-17 23:39+0700\n"
-"PO-Revision-Date: 2026-06-18 11:54+0700\n"
+"Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
+"POT-Creation-Date: 2026-06-18 15:44+0700\n"
+"PO-Revision-Date: 2026-06-18 15:49+0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -18,52 +18,72 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.9\n"
 
-#: D:\wfo\Software\battery_check\addon\globalPlugins\battery_check\settings.py:15
-#: D:\wfo\Software\battery_check\addon\globalPlugins\battery_check\__init__.py:51
+#. Translators: name of the addon category that will appear in the input gestures section.
+#: addon\globalPlugins\battery_check\__init__.py:51
+#: addon\globalPlugins\battery_check\settings.py:15
 msgid "Battery Check"
 msgstr "Battery Check"
 
-#: D:\wfo\Software\battery_check\addon\globalPlugins\battery_check\settings.py:18
-msgid "Monitorear la batería cuando inicie NVDA"
-msgstr "Monitor battery when starting NVDA"
-
-#: D:\wfo\Software\battery_check\addon\globalPlugins\battery_check\settings.py:19
-msgid "Monitorear automáticamente la batería cuando se conecte el cargador"
-msgstr "Automatically monitor battery when connect charger"
-
-#: D:\wfo\Software\battery_check\addon\globalPlugins\battery_check\settings.py:20
-msgid "Porcentaje de batería máximo desde que se empezará a emitir la alerta"
-msgstr "Maximum battery percentage since the alert will begin to be issued"
-
-#: D:\wfo\Software\battery_check\addon\globalPlugins\battery_check\__init__.py:83
+#. Se crea una instancia de sensors_battery para verificar si existe batería en el sistema.
+#. Si no es así se emite un mensaje y se detiene la ejecución del método.
+#. Translators: Message to inform the user that there is no battery in the system.
+#: addon\globalPlugins\battery_check\__init__.py:83
 msgid "No hay batería del sistema."
 msgstr "There is no system battery."
 
-#: D:\wfo\Software\battery_check\addon\globalPlugins\battery_check\__init__.py:91
+#. Translators: Message to indicate that battery monitoring has started.
+#: addon\globalPlugins\battery_check\__init__.py:91
 msgid "Monitoreo de la batería iniciado."
 msgstr "Battery monitoring started."
 
-#: D:\wfo\Software\battery_check\addon\globalPlugins\battery_check\__init__.py:105
+#. Translators: Message to indicate that battery monitoring has finished.
+#: addon\globalPlugins\battery_check\__init__.py:105
 msgid "Monitoreo de la batería finalizado."
 msgstr "Battery monitoring has stopped."
 
-#: D:\wfo\Software\battery_check\addon\globalPlugins\battery_check\__init__.py:129
+#: addon\globalPlugins\battery_check\__init__.py:129
+msgid "conectada"
+msgstr "connected"
+
+#: addon\globalPlugins\battery_check\__init__.py:129
+msgid "desconectada"
+msgstr "disconnected"
+
+#: addon\globalPlugins\battery_check\__init__.py:129
 #, python-brace-format
 msgid "Batería {}."
 msgstr "Battery {}."
 
-#: D:\wfo\Software\battery_check\addon\globalPlugins\battery_check\__init__.py:135
+#. Translators: Message to indicate to the user that their battery is fully charged.
+#: addon\globalPlugins\battery_check\__init__.py:135
 msgid "¡Batería cargada al límite!"
 msgstr "Battery charged to the limit!"
 
-#: D:\wfo\Software\battery_check\addon\globalPlugins\battery_check\__init__.py:142
+#: addon\globalPlugins\battery_check\__init__.py:142
 msgid "Inicia o detiene el monitoreo de la batería"
 msgstr "Start or stop battery monitoring"
 
+#: addon\globalPlugins\battery_check\settings.py:18
+msgid "Monitorear la batería cuando inicie NVDA"
+msgstr "Monitor battery when starting NVDA"
+
+#: addon\globalPlugins\battery_check\settings.py:19
+msgid "Monitorear automáticamente la batería cuando se conecte el cargador"
+msgstr "Automatically monitor battery when connect charger"
+
+#: addon\globalPlugins\battery_check\settings.py:20
+msgid "Porcentaje de batería máximo desde que se empezará a emitir la alerta"
+msgstr "Maximum battery percentage since the alert will begin to be issued"
+
+#. Add-on summary, usually the user visible name of the addon.
+#. Translators: Summary for this add-on
+#. to be shown on installation and add-on information found in Add-ons Manager.
 #: buildVars.py:23
 msgid "Monitoreo de batería"
 msgstr "Battery Check"
 
+#. Add-on description
+#. Translators: Long description to be shown for this add-on on add-on information from add-ons manager
 #: buildVars.py:26
 msgid ""
 "La función de este addon es monitorear la batería del sistema y emitir un "

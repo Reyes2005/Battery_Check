@@ -126,7 +126,7 @@ class GlobalPlugin (globalPluginHandler.GlobalPlugin):
 
 				if batteryStatus != battery.power_plugged:
 					batteryStatus = battery.power_plugged
-					ui.message(_("Batería {}.".format('conectada' if batteryStatus else 'desconectada')))
+					ui.message(_("Batería {}.").format(_('conectada') if batteryStatus else _('desconectada')))
 
 			if needs_beep and beep.elapsed(10, False): #Si la variable de control está establecida en True y pasan 10 segundos, entonces se emite un tono y se lanza un aviso por el TTS.
 				beep.restart()

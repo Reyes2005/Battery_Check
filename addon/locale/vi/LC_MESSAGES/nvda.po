@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 'Battery_Check' '1.2.1'\n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
-"POT-Creation-Date: 2026-06-17 23:21+0700\n"
-"PO-Revision-Date: 2026-06-18 11:51+0700\n"
+"POT-Creation-Date: 2026-06-18 15:44+0700\n"
+"PO-Revision-Date: 2026-06-18 15:49+0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: vi\n"
@@ -40,6 +40,14 @@ msgstr "Quá trình giám sát pin đã bắt đầu."
 #: addon\globalPlugins\battery_check\__init__.py:105
 msgid "Monitoreo de la batería finalizado."
 msgstr "Giám sát pin đã dừng."
+
+#: addon\globalPlugins\battery_check\__init__.py:129
+msgid "conectada"
+msgstr "đã kết nối"
+
+#: addon\globalPlugins\battery_check\__init__.py:129
+msgid "desconectada"
+msgstr "đã ngắt kết nối"
 
 #: addon\globalPlugins\battery_check\__init__.py:129
 #, python-brace-format
@@ -81,5 +89,5 @@ msgid ""
 "La función de este addon es monitorear la batería del sistema y emitir un "
 "aviso al esta llegar al 100%."
 msgstr ""
-"Chức năng của addon này là theo dõi pin hệ thống và đưa ra cảnh báo khi "
-"đạt 100%."
+"Chức năng của addon này là theo dõi pin hệ thống và đưa ra cảnh báo khi đạt "
+"100%."
