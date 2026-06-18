@@ -1,10 +1,6 @@
-addon/doc/*.css
-addon/doc/en/
-addon/doc/es/
+/addon/doc/*.md
 *_docHandler.py
-*.html
-manifest.ini
-*.mo
+*.po
 *.pot
 *.py[co]
 *.nvda-addon
