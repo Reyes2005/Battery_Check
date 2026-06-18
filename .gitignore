@@ -1,9 +1,6 @@
-addon/doc/*.css
-addon/doc/en/
-addon/doc/es/
-*_docHandler.py
+*.css
 *.html
-manifest.ini
+*_docHandler.py
 *.mo
 *.pot
 *.py[co]
