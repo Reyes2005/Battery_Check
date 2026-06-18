@@ -1,6 +1,7 @@
-/addon/doc/**/*.md
+*.css
+*.html
 *_docHandler.py
-*.po
+*.mo
 *.pot
 *.py[co]
 *.nvda-addon

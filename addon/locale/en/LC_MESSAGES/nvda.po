@@ -1,0 +1,73 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-17 23:39+0700\n"
+"PO-Revision-Date: 2026-06-18 11:54+0700\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.9\n"
+
+#: D:\wfo\Software\battery_check\addon\globalPlugins\battery_check\settings.py:15
+#: D:\wfo\Software\battery_check\addon\globalPlugins\battery_check\__init__.py:51
+msgid "Battery Check"
+msgstr "Battery Check"
+
+#: D:\wfo\Software\battery_check\addon\globalPlugins\battery_check\settings.py:18
+msgid "Monitorear la batería cuando inicie NVDA"
+msgstr "Monitor battery when starting NVDA"
+
+#: D:\wfo\Software\battery_check\addon\globalPlugins\battery_check\settings.py:19
+msgid "Monitorear automáticamente la batería cuando se conecte el cargador"
+msgstr "Automatically monitor battery when connect charger"
+
+#: D:\wfo\Software\battery_check\addon\globalPlugins\battery_check\settings.py:20
+msgid "Porcentaje de batería máximo desde que se empezará a emitir la alerta"
+msgstr "Maximum battery percentage since the alert will begin to be issued"
+
+#: D:\wfo\Software\battery_check\addon\globalPlugins\battery_check\__init__.py:83
+msgid "No hay batería del sistema."
+msgstr "There is no system battery."
+
+#: D:\wfo\Software\battery_check\addon\globalPlugins\battery_check\__init__.py:91
+msgid "Monitoreo de la batería iniciado."
+msgstr "Battery monitoring started."
+
+#: D:\wfo\Software\battery_check\addon\globalPlugins\battery_check\__init__.py:105
+msgid "Monitoreo de la batería finalizado."
+msgstr "Battery monitoring has stopped."
+
+#: D:\wfo\Software\battery_check\addon\globalPlugins\battery_check\__init__.py:129
+#, python-brace-format
+msgid "Batería {}."
+msgstr "Battery {}."
+
+#: D:\wfo\Software\battery_check\addon\globalPlugins\battery_check\__init__.py:135
+msgid "¡Batería cargada al límite!"
+msgstr "Battery charged to the limit!"
+
+#: D:\wfo\Software\battery_check\addon\globalPlugins\battery_check\__init__.py:142
+msgid "Inicia o detiene el monitoreo de la batería"
+msgstr "Start or stop battery monitoring"
+
+#: buildVars.py:23
+msgid "Monitoreo de batería"
+msgstr "Battery Check"
+
+#: buildVars.py:26
+msgid ""
+"La función de este addon es monitorear la batería del sistema y emitir un "
+"aviso al esta llegar al 100%."
+msgstr ""
+"The function of this addon is to monitor the system battery and issue a "
+"warning when it reaches 100%."
